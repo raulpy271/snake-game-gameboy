@@ -35,3 +35,9 @@ EnableVBlank:
     RES 1, [HL]
     RET
 
+; B is larger than A? If yes set Carry Flag
+BLargerThanA:
+    SUB A, B
+    RET
+
+

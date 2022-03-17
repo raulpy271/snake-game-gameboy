@@ -1,7 +1,6 @@
 
 INCLUDE "src/utils/hardware.inc"
-
-INCLUDE "src/utils/subprograms.asm"
+INCLUDE "src/physics.asm"
 
 SNAKE_MOVING_RIGHT EQU 1
 SNAKE_MOVING_LEFT EQU 2
@@ -53,7 +52,16 @@ UpdateSnake:
     LD A, [HL]
     INC A
     LD [HL], A
+    CALL SetCIfColision
+    CALL C, MoveFruit
     RETI
+
+
+MoveFruit:
+    LD A, [$FE05] ; Fruit X cordinate
+    INC A
+    LD [$FE05], A
+    RET
 
 SECTION "VARIABLES", WRAM0
 MOVING: ds SNAKE_MOVING_RIGHT
@@ -73,5 +81,6 @@ OAMData:
     ; First Object - Sprite snake 
     ; Y = 16, X = 8, Tile number 1, No flags
     DB 16, 8, 1, 0 
+    DB 50, 8, 2, 0 
 OAMDataEnd:
 
