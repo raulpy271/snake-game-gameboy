@@ -1,4 +1,7 @@
+
 INCLUDE "src/utils/hardware.inc"
+
+INCLUDE "src/utils/subprograms.asm"
 
 SNAKE_MOVING_RIGHT EQU 1
 SNAKE_MOVING_LEFT EQU 2
@@ -14,9 +17,13 @@ SECTION "Boot Vector", ROM0[$100]
 
 SECTION "Main", ROM0[$150]
 Main:
-    CALL SetupPalette
+    CALL LCDOff
     CALL SetupScreen
-    JP Wait
+    CALL SetupPalette
+    CALL SetupLCD
+    CALL EnableVBlank
+    EI
+    JP Sleep
 
 SetupPalette:
     ld a, %11100100
@@ -25,14 +32,27 @@ SetupPalette:
     RET
 
 SetupScreen:
-    ld a, LCDCF_ON + LCDCF_OBJON + LCDCF_BG8000
+    LD DE, Tiles 
+    LD HL, $8000
+    LD BC, TilesEnd - Tiles
+    CALL MEMCOPY
+    LD DE, OAMData
+    LD HL, $FE00
+    LD BC, OAMDataEnd - OAMData
+    CALL MEMCOPY
+    RET
+
+SetupLCD:
+    ld a, LCDCF_ON + LCDCF_BGON + LCDCF_OBJON + LCDCF_BG8000
     ld [rLCDC], a
     RET
 
-Wait:
-    JP Wait
-
 UpdateSnake:
+    ; Incrementa o valor do campo Y do primeiro objeto 
+    LD HL, $FE00
+    LD A, [HL]
+    INC A
+    LD [HL], A
     RETI
 
 SECTION "VARIABLES", WRAM0
@@ -40,8 +60,18 @@ MOVING: ds SNAKE_MOVING_RIGHT
 
 SECTION "DATA", ROM0
 
-SnakeTile: 
+Tiles:
+    ; White tile
+    DB $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+    ; Snake tile
     INCBIN "tiles/snake.bin"
-FruitTie:
+    ; Fruit tile
     INCBIN "tiles/fruit.bin"
+TilesEnd:
+
+OAMData:
+    ; First Object - Sprite snake 
+    ; Y = 16, X = 8, Tile number 1, No flags
+    DB 16, 8, 1, 0 
+OAMDataEnd:
 
