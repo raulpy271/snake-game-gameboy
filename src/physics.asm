@@ -73,3 +73,26 @@ SetCIfVerticalColision:
     CALL BLargerThanA
     RET
 
+SetRandomPositionFruit:
+    CALL LD_A_RandomCordinate
+    LD [$FE04], A
+    CALL LD_A_RandomCordinate
+    LD [$FE05], A
+    RET
+
+; Set A register in range: 16 ... 144 + 8
+LD_A_RandomCordinate:
+    LD A, 0
+    CALL LD_A_RandomNumber
+    LD B, (144 + 16) - 8
+    LD C, A
+    CALL BLargerThanA
+    LD A, C
+    JP NC, LD_A_RandomCordinate
+    LD B, 16
+    LD C, A
+    CALL BLargerThanA
+    LD A, C
+    JP C, LD_A_RandomCordinate
+    RET
+

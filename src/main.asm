@@ -9,6 +9,12 @@ SNAKE_MOVING_DOWN EQU 4
 
 SECTION "VBlank Interrupt", ROM0[$40]
 VBLankInterrupt::
+    LD A, [MOVING]
+    INC A
+    LD [MOVING], A
+    CP A, 0
+    ; Generate a random position for the fruit every time MOVING turn from $ff to $0
+    CALL Z, SetRandomPositionFruit
     JP UpdateSnake
 
 SECTION "Boot Vector", ROM0[$100]
@@ -16,6 +22,7 @@ SECTION "Boot Vector", ROM0[$100]
 
 SECTION "Main", ROM0[$150]
 Main:
+    CALL EnableTime
     CALL LCDOff
     CALL SetupScreen
     CALL SetupPalette
