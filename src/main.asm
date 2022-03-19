@@ -8,13 +8,7 @@ SNAKE_MOVING_UP EQU 3
 SNAKE_MOVING_DOWN EQU 4
 
 SECTION "VBlank Interrupt", ROM0[$40]
-VBLankInterrupt::
-    LD A, [MOVING]
-    INC A
-    LD [MOVING], A
-    CP A, 0
-    ; Generate a random position for the fruit every time MOVING turn from $ff to $0
-    CALL Z, SetRandomPositionFruit
+VBLankInterrupt:
     JP UpdateSnake
 
 SECTION "Boot Vector", ROM0[$100]
@@ -54,15 +48,21 @@ SetupLCD:
     RET
 
 UpdateSnake:
-    ; Incrementa o valor do campo Y do primeiro objeto 
-    LD HL, $FE00
-    LD A, [HL]
-    INC A
-    LD [HL], A
+    LD A, [MOVING]
+    CP A, SNAKE_MOVING_LEFT
+    CALL Z, MovingLeft
+    LD A, [MOVING]
+    CP A, SNAKE_MOVING_DOWN
+    CALL Z, MovingDown
+    LD A, [MOVING]
+    CP A, SNAKE_MOVING_UP
+    CALL Z, MovingUp
+    LD A, [MOVING]
+    CP A, SNAKE_MOVING_RIGHT
+    CALL Z, MovingRight
     CALL SetCIfColision
-    CALL C, MoveFruit
+    CALL C, SetRandomPositionFruit
     RETI
-
 
 MoveFruit:
     LD A, [$FE05] ; Fruit X cordinate
@@ -70,10 +70,37 @@ MoveFruit:
     LD [$FE05], A
     RET
 
-SECTION "VARIABLES", WRAM0
-MOVING: ds SNAKE_MOVING_RIGHT
+MovingLeft:
+    LD HL, $FE01
+    LD A, [HL]
+    DEC A
+    LD [HL], A
+    RET
+
+MovingDown:
+   LD HL, $FE00
+   LD A, [HL]
+   INC A
+   LD [HL], A
+   RET
+
+MovingRight:
+   LD HL, $FE01
+   LD A, [HL]
+   INC A
+   LD [HL], A
+   RET
+
+MovingUp:
+   LD HL, $FE00
+   LD A, [HL]
+   DEC A
+   LD [HL], A
+   RET
 
 SECTION "DATA", ROM0
+
+MOVING: DB SNAKE_MOVING_RIGHT
 
 Tiles:
     ; White tile
