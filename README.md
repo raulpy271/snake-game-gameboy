@@ -6,7 +6,7 @@ An snake game written to run in gameboy console.
 
 To execute in your machine, you can use our pre-genereted ROM in your favorite emulator or you can create the ROM for yourself. 
 
-If you only want to use a pre-genereted, use this [link](https://github.com/raulpy271/snake-game-gameboy) to download the ROM and go to section [Related](README.md#Related) to see recomended emulators.
+If you only want to use a pre-genereted, use this [link](https://github.com/raulpy271/snake-game-gameboy/raw/main/build/main.gb) to download the ROM and go to section [Related](README.md#Related) to see recomended emulators.
 
 If you want to create the rom, install the tools of [rgbds](https://rgbds.gbdev.io/), after it, you can type the following:
 
