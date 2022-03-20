@@ -1,2 +1,3 @@
 tiles/*.bin
-git_comandos.txt
+build/main.o
+build/main.sav
