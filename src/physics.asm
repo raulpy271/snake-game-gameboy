@@ -124,3 +124,23 @@ MovingUp:
    LD [HL], A
    RET
 
+SetMovingToRight:
+    LD A, SNAKE_MOVING_RIGHT
+    LD [MOVING], A
+    RET
+
+SetMovingToLeft:
+    LD A, SNAKE_MOVING_LEFT
+    LD [MOVING], A
+    RET
+
+SetMovingToUp:
+    LD A, SNAKE_MOVING_UP
+    LD [MOVING], A
+    RET
+
+SetMovingToDown:
+    LD A, SNAKE_MOVING_DOWN
+    LD [MOVING], A
+    RET
+

@@ -82,6 +82,30 @@ UpdateSnake:
     RETI
 
 UpdateKeypad:
+    ; Request to read directional buttons
+    LD A, P1F_5
+    LD [rP1], A
+
+    ; Check Right button was pressed
+    LD A, [rP1]
+    BIT 0, A
+    CALL Z, SetMovingToRight
+
+    ; Check Left button was pressed
+    LD A, [rP1]
+    BIT 1, A
+    CALL Z, SetMovingToLeft
+    
+    ; Check Up button was pressed
+    LD A, [rP1]
+    BIT 2, A
+    CALL Z, SetMovingToUp
+    
+    ; Check Down button was pressed
+    LD A, [rP1]
+    BIT 3, A
+    CALL Z, SetMovingToDown
+    
     RETI
 
 SECTION "VARIABLES", WRAM0
