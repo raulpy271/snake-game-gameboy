@@ -96,3 +96,31 @@ LD_A_RandomCordinate:
     JP C, LD_A_RandomCordinate
     RET
 
+MovingLeft:
+    LD HL, $FE01
+    LD A, [HL]
+    DEC A
+    LD [HL], A
+    RET
+
+MovingDown:
+   LD HL, $FE00
+   LD A, [HL]
+   INC A
+   LD [HL], A
+   RET
+
+MovingRight:
+   LD HL, $FE01
+   LD A, [HL]
+   INC A
+   LD [HL], A
+   RET
+
+MovingUp:
+   LD HL, $FE00
+   LD A, [HL]
+   DEC A
+   LD [HL], A
+   RET
+

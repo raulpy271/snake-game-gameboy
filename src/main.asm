@@ -7,21 +7,33 @@ SNAKE_MOVING_LEFT EQU 2
 SNAKE_MOVING_UP EQU 3
 SNAKE_MOVING_DOWN EQU 4
 
+SNAKE_MOVING_DEFAULT EQU SNAKE_MOVING_DOWN
+
 SECTION "VBlank Interrupt", ROM0[$40]
 VBLankInterrupt:
     JP UpdateSnake
 
+SECTION "Keypad Interrupt", ROM0[$60]
+KeypadInterrupt:
+    JP UpdateKeypad
+
 SECTION "Boot Vector", ROM0[$100]
     JR Main
+
+    ; Fill the current address with zeros until $150
+    ; This is useful for avoid overwritten the cartridge header 
+    ds $150 - @, 0 
 
 SECTION "Main", ROM0[$150]
 Main:
     CALL EnableTime
     CALL LCDOff
     CALL SetupScreen
+    CALL SetupSnakeDirection
     CALL SetupPalette
     CALL SetupLCD
     CALL EnableVBlank
+    CALL EnableKeypad
     EI
     JP Sleep
 
@@ -29,6 +41,11 @@ SetupPalette:
     ld a, %11100100
     ld [rBGP], a
     ld [rOBP0], a
+    RET
+
+SetupSnakeDirection:
+    LD A, SNAKE_MOVING_DEFAULT
+    LD [MOVING], A
     RET
 
 SetupScreen:
@@ -64,43 +81,14 @@ UpdateSnake:
     CALL C, SetRandomPositionFruit
     RETI
 
-MoveFruit:
-    LD A, [$FE05] ; Fruit X cordinate
-    INC A
-    LD [$FE05], A
-    RET
+UpdateKeypad:
+    RETI
 
-MovingLeft:
-    LD HL, $FE01
-    LD A, [HL]
-    DEC A
-    LD [HL], A
-    RET
+SECTION "VARIABLES", WRAM0
 
-MovingDown:
-   LD HL, $FE00
-   LD A, [HL]
-   INC A
-   LD [HL], A
-   RET
-
-MovingRight:
-   LD HL, $FE01
-   LD A, [HL]
-   INC A
-   LD [HL], A
-   RET
-
-MovingUp:
-   LD HL, $FE00
-   LD A, [HL]
-   DEC A
-   LD [HL], A
-   RET
+MOVING: DS 1
 
 SECTION "DATA", ROM0
-
-MOVING: DB SNAKE_MOVING_RIGHT
 
 Tiles:
     ; White tile

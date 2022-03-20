@@ -35,6 +35,11 @@ EnableVBlank:
     RES 1, [HL]
     RET
 
+EnableKeypad:
+    LD HL, rIE
+    SET 4, [HL]
+    RET
+
 EnableTime:
     LD A, %00000100
     LD [rTAC], A
