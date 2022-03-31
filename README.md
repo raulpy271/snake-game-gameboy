@@ -2,6 +2,8 @@
 
 An snake game written to run in gameboy console.
 
+![Game Running](/assets/example.gif)
+
 # Usage
 
 To execute in your machine, you can use our pre-genereted ROM in your favorite emulator or you can create the ROM for yourself. 
